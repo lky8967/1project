@@ -1,12 +1,17 @@
+
 from flask import Flask, render_template, request, jsonify
 app = Flask(__name__)
 
 from pymongo import MongoClient
 import certifi
+import mongopy
+
 ca = certifi.where()
 
-client = MongoClient('mongodb+srv://test:sparta@cluster0.dhiik.mongodb.net/Cluster0?retryWrites=true&w=majority', tlsCAFile=ca)
+client = MongoClient(mongopy.password, tlsCAFile=ca)
 db = client.dbsparta
+
+
 
 
 
@@ -18,4 +23,8 @@ def home():
 
 
 
+
+
+if __name__ == '__main__':
+    app.run('0.0.0.0', port=5000, debug=True)
 
