@@ -17,18 +17,12 @@ def created():
 @app.route("/freezer_created", methods=["POST"])
 def freezer_created():
     name_receive = request.form['name_give']
-    comment_receive = request.form['comment_give']
-    s_date_receive = request.form['s_date_give']
-    e_date_receive = request.form['e_date_give']
     freezer_list = list(db.freezer.find({}, {'_id': False}))
     count = len(freezer_list) + 1
 
     doc = {
         'name':name_receive,
-        'comment':comment_receive,
-        's_date':s_date_receive,
-        'e_date':e_date_receive,
-        'num':count,
+        'num':count
     }
 
     db.freezer.insert_one(doc)
