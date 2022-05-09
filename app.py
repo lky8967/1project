@@ -10,28 +10,9 @@ client = MongoClient(mongopy.password, tlsCAFile=ca)
 db = client.dbsparta
 
 
-
-
 @app.route('/')
-def home():
-    return render_template('index.html')
-
-
-@app.route('/create')
 def created():
     return render_template('created.html')
-
-@app.route('/update')
-def update():
-    return render_template('update.html')
-
-
-@app.route("/freezer", methods=["GET"])
-def freezer_get():
-    freezer_list = list(db.freezer.find({}, {'_id': False}))
-    return jsonify({'freezers':freezer_list})
-
-
 
 @app.route("/freezer_created", methods=["POST"])
 def freezer_created():
