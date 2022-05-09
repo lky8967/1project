@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <meta property="og:title" content="10cm 팬명록" />
+    <meta property="og:description" content="응원 한마디 남기고 가세요" />
+    <meta property="og:image" content="https://movie-phinf.pstatic.net/20210715_95/1626338192428gTnJl_JPEG/movie_image.jpg" />
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+    <title>냉장고</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700;900&display=swap"
+          rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Noto Serif KR', serif;
+        }
+
+        .mypic {
+            width: 100%;
+            height: 300px;
+
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://t1.daumcdn.net/cfile/tistory/2533CF4F57B4E62307');
+            background-position: center 30%;
+            background-size: cover;
+
+            color: white;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mypost {
+            width: 95%;
+            max-width: 500px;
+            margin: 20px auto 20px auto;
+
+            box-shadow: 0px 0px 3px 0px black;
+            padding: 20px;
+        }
+
+        .mypost > button {
+            margin-top: 15px;
+        }
+
+        .mycards {
+            width: 95%;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        .mycards > .card {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        #deleteBtn{
+            float: right;
+            border-radius: 10px;
+            font-size:13px;
+        }
+    </style>
+         <script>
+        $(document).ready(function () {
+            show_comment()
+        });
+
+        function save_comment() {
+            let name = $('#name').val()
+            let comment = $('#comment').val()
+            let s_date = $('#s_date').val()
+            let e_date = $('#e_date').val()
+
+            if (name == '' ){
+                alert('이름을 입력해주세요')
+            } else if (comment == '') {
+                alert('상세 정보를 입력해 주세요')
+            } else if (s_date == ''){
+                alert('구매 날짜를 입력해주세요')
+            } else if (e_date == ''){
+                alert('유통기한을 입력해주세요')
+            } else {
+                $.ajax({
+                    type: 'POST',
+                    url: '/freezer_created',
+                    data: {
+                        name_give: name,
+                        comment_give: comment,
+                        s_date_give: s_date,
+                        e_date_give: e_date
+                    },
+                    success: function (response) {
+                        alert(response['msg'])
+                        window.location.href="/"
+                    }
+                })
+            }
+        }
+
+
+    </script>
+</head>
+<body>
+<div class="mypic">
+    <h1></h1>
+</div>
+<div class="mypost">
+    <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="name">
+        <label for="floatingInput">이름</label>
+    </div>
+
+        <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="comment" >
+        <label for="floatingInput">상세 내용</label>
+    </div>
+
+        <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="s_date">
+        <label for="floatingInput">구매한 날짜</label>
+    </div>
+
+        <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="e_date">
+        <label for="floatingInput">유통기한</label>
+    </div>
+
+
+<!--    <div class="form-floating">-->
+<!--<textarea class="form-control" placeholder="Leave a comment here" id="comment"-->
+<!--          style="height: 100px"></textarea>-->
+<!--        <label for="floatingTextarea2">응원댓글</label>-->
+<!--    </div>-->
+    <button onclick="save_comment()" type="button" class="btn btn-dark">등록하기</button>
+</div>
+<div class="mycards" id="comment-list">
+<!--    <div class="card">-->
+<!--        <div class="card-body">-->
+<!--            <blockquote class="blockquote mb-0">-->
+<!--                <p>새로운 앨범 너무 멋져요!</p>-->
+<!--                <footer class="blockquote-footer">호빵맨</footer>-->
+<!--            </blockquote>-->
+<!--        </div>-->
+<!--    </div>-->
+</div>
+
+</body>
+</html>

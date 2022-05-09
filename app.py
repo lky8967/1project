@@ -14,9 +14,44 @@ db = client.dbsparta
 
 @app.route('/')
 def home():
-    return render_template('main.html')
+    return render_template('index.html')
 
 
+@app.route('/create')
+def created():
+    return render_template('created.html')
+
+@app.route('/update')
+def update():
+    return render_template('update.html')
+
+
+@app.route("/freezer", methods=["GET"])
+def freezer_get():
+    freezer_list = list(db.freezer.find({}, {'_id': False}))
+    return jsonify({'freezers':freezer_list})
+
+
+
+@app.route("/freezer_created", methods=["POST"])
+def freezer_created():
+    name_receive = request.form['name_give']
+    comment_receive = request.form['comment_give']
+    s_date_receive = request.form['s_date_give']
+    e_date_receive = request.form['e_date_give']
+    freezer_list = list(db.freezer.find({}, {'_id': False}))
+    count = len(freezer_list) + 1
+
+    doc = {
+        'name':name_receive,
+        'comment':comment_receive,
+        's_date':s_date_receive,
+        'e_date':e_date_receive,
+        'num':count,
+    }
+
+    db.freezer.insert_one(doc)
+    return jsonify({'msg':'저장완료 !'})
 
 
 
