@@ -23,13 +23,14 @@ db = client.dbsparta
 ## HTML을 주는 부분
 @app.route('/')
 def home():
-   return render_template('index.html')
+   return render_template('write.html')
 
 
 ## API 역할을 하는 부분
 @app.route('/owtest/save', methods=['POST'])
 def foodsaving():
     id = make_id()
+
 ##음식 정보
     name_receive = request.form['name_give']
     group_receive = request.form['group_give']
@@ -54,20 +55,6 @@ def foodsaving():
     file.save(save_to)
 
 #
-  #  i = 1
- #   for image in images:
-  #      imagename = str(id) + "_" + str(i) + '.jpg'
-  #      imagename = secure_filename(imagename)  # 이름 검사
- #       image.save(save_to, imagename)  # 저장
-  #      i += 1
-
-        # extension = image.filename.rsplit('.', 1)[1].lower() # 확장자 추출
-        # for compare_extension in ALLOWED_EXTENSIONS:
-        #     if ( compare_extension == extension): # 허용되는 확장자 검사
-        #         imagename = str(id) + "_" + str(i) + extension
-        #         imagename = secure_filename(imagename) # 이름 검사
-        #         image.save(os.path.join(app.config['UPLOAD_FOLDER'], imagename)) # 저장
-        #         i += 1
 
     food_list = list(db.owtest.find({}, {'_id': False}))
     count = len(food_list) + 1
