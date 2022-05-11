@@ -1,5 +1,4 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for
-from pymongo import MongoClient
 import jwt
 import hashlib
 import mongopy
@@ -93,11 +92,6 @@ def check_nickname_dup():
     nickname_receive = request.form['nickname_give']
     exists = bool(db.users.find_one({"nickname": nickname_receive}))
     return jsonify({'result': 'success', 'exists': exists})
-
-
-@app.route('/created')
-def created():
-    return render_template('created.html')
 
 ## API 역할을 하는 부분
 @app.route('/owtest/save', methods=['POST'])
