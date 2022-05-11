@@ -108,47 +108,6 @@
         }
     </style>
     <script>
-        $(document).ready(function () {
-            listing();
-        });
-
-        function listing() {
-            $.ajax({
-                type: 'GET',
-                url: '/fridge',
-                data: {},
-                success: function (response) {
-                    let rows = response['fridge']
-                    for (let i = 0; i < rows.length; i++){
-                        let comment = rows[i]['comment']
-                        let title = rows[i]['title']
-                        let image = rows[i]['image']
-                        let desc = rows[i]['desc']
-                        let star = rows[i]['star']
-
-                        let star_image = '⭐'.repeat(star)
-
-                        let temp_html = `<div class="col">
-                                        <div class="card h-100">
-                                            <img src="${image}"
-                                                 class="card-img-top">
-                                            <div class="card-body">
-                                                <h5 class="card-title">${title}</h5>
-                                                <p class="card-text">${desc}</p>
-                                                <p>${star_image}</p>
-                                                <p class="mycomment">${comment}</p>
-                                            </div>
-                                        </div>
-                                    </div>`
-
-                        $('#cards-box').append(temp_html)
-
-                    }
-
-                    console.log()
-                }
-            })
-        }
 
         function posting() {
             let name = $('#name').val()
@@ -156,15 +115,57 @@
             let comment = $('#comment').val()
 
             $.ajax({
-                type: 'POST',
-                url: '/fridge',
-                data: {name_give:name, star_give:star,comment_give:comment},
+                type: "POST",
+                url: "/posts",
+                data: {name_give: name, star_give: star, comment_give: comment},
                 success: function (response) {
                     alert(response['msg'])
                     window.location.reload()
                 }
-            });
+            })
         }
+
+
+        function get_posts() {
+            $("#cards-box").empty()
+            $.ajax({
+                type: "GET",
+                url: "/get_posts",
+                data: {},
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        let rows = response["posts"]
+                        for (let i = 0; i < rows.length; i++) {
+                            let comment = rows[i]['comment']
+                            let title = rows[i]['title']
+                            let image = rows[i]['image']
+                            let desc = rows[i]['desc']
+                            let star = rows[i]['star']
+
+                            let star_image = '⭐'.repeat(star)
+
+                            let temp_html = `<div class="col">
+                                <div class="card h-100">
+                                    <img src="${image}"
+                                         class="card-img-top">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${title}</h5>
+                                        <p class="card-text">${desc}</p>
+                                        <p>${star_image}</p>
+                                        <p class="mycomment">${comment}</p>
+                                    </div>
+                                </div>
+                            </div>`
+
+                            $('#cards-box').append(temp_html)
+                        }
+                    }
+                }
+            })
+        }
+        $(document).ready(function () {
+            get_posts()
+        })
 
         function open_box() {
             $('#post-box').show()
@@ -173,6 +174,7 @@
         function close_box() {
             $('#post-box').hide()
         }
+
     </script>
 </head>
 

@@ -24,7 +24,7 @@ app.config['MAX_CONTENT_LENGTH'] = 500 * 1024
 
 from pymongo import MongoClient
 client = MongoClient(mongopy.password, tlsCAFile=ca)
-db = client.dbsparta
+db = client.dbsparta_plus_project1
 
 @app.route('/')
 def home():
@@ -42,6 +42,19 @@ def home():
 def login():
     msg = request.args.get("msg")
     return render_template('login.html', msg=msg)
+
+@app.route('/user/<username>')
+def user(username):
+    # 각 사용자의 프로필과 글을 모아볼 수 있는 공간
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        status = (username == payload["id"])  # 내 프로필이면 True, 다른 사람 프로필 페이지면 False
+
+        user_info = db.users.find_one({"username": username}, {"_id": False})
+        return render_template('user.html', user_info=user_info, status=status)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
 
 @app.route('/sign_in', methods=['POST'])
 def sign_in():
@@ -172,24 +185,67 @@ def make_id():
     return int(id) #정수로 변환
 
 
-@app.route("/fridge", methods=["POST"])
-def fridge_post():
-    name_receive = request.form['name_give']
-    star_receive = request.form['star_give']
-    comment_receive = request.form['comment_give']
-    doc = {
-        'name': name_receive,
-        'star': star_receive,
-        'comment': comment_receive
-    }
-    db.fridge.insert_one(doc)
 
-    return jsonify({'msg':'저장 완료!'})
 
-@app.route("/fridge", methods=["GET"])
-def fridge_get():
-    item_list = list(db.fridge.find({}, {'_id': False}))
-    return jsonify({'fridge':item_list})
+
+@app.route('/posting', methods=['POST'])
+def posting():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        # 포스팅하기
+        user_info = db.users.find_one({"username": payload["id"]})
+        comment_receive = request.form["comment_give"]
+        date_receive = request.form["date_give"]
+        doc = {
+            "username": user_info["username"],
+            "profile_name": user_info["profile_name"],
+            "profile_pic_real": user_info["profile_pic_real"],
+            "comment": comment_receive,
+            "date": date_receive
+        }
+        db.posts.insert_one(doc)
+
+        return jsonify({"result": "success", 'msg': '포스팅 성공'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+
+
+@app.route("/get_posts", methods=['GET'])
+def get_posts():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        # 포스팅 목록 받아오기
+        posts = list(db.posts.find({}).sort("date", -1).limit(20))
+        for post in posts:
+            post["_id"] = str(post["_id"])
+        return jsonify({"result": "success", "msg": "포스팅을 가져왔습니다.", "posts": posts })
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+            return redirect(url_for("home"))
+
+
+
+
+
+#@app.route("/fridge", methods=["POST"])
+#def fridge_post():
+    #name_receive = request.form['name_give']
+    #star_receive = request.form['star_give']
+    #comment_receive = request.form['comment_give']
+    #doc = {
+       # 'name': name_receive,
+        #'star': star_receive,
+       # 'comment': comment_receive
+  #  }
+    #db.fridge.insert_one(doc)
+
+  #  return jsonify({'msg':'저장 완료!'})
+
+#@app.route("/fridge", methods=["GET"])
+#def fridge_get():
+ #   item_list = list(db.fridge.find({}, {'_id': False}))
+  #  return jsonify({'fridge':item_list})
 
 
 
