@@ -139,6 +139,7 @@ def foodsaving():
     food_list = list(db.owtest.find({}, {'_id': False}))
     count = len(food_list) + 1
 
+<<<<<<< HEAD
 ##음식정보 입력
     doc = {
         'id': id,
@@ -151,6 +152,22 @@ def foodsaving():
         'mytime1': f'{mytime1}',
         'file': f'{filename}.{extension}'
     }
+=======
+    ##음식정보 입력
+        doc = {
+            "username": user_info["username"], ##유저 id입력
+            #"profile_name": user_info["nickname"], ##유저 닉네임입력
+            'foodid': foodid,
+            'name': name_receive,
+            'num': count,
+            'group': group_receive,
+            'date':date_receive,
+            'star':star_receive,
+            'comment':comment_receive,
+            'mytime1': f'{mytime1}',
+            'file': f'{filename}.{extension}'
+        }
+>>>>>>> 6bf5673d9776be3d04d16728fd66618fa4ff32f9
 
     db.owtest.insert_one(doc)
 
