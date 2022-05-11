@@ -19,7 +19,8 @@ ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg']
 #IMAGE_PATH = #'------s/' #사진 저장된 경로
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 app.config['MAX_CONTENT_LENGTH'] = 500 * 1024
 
 from pymongo import MongoClient
@@ -93,10 +94,26 @@ def check_nickname_dup():
     exists = bool(db.users.find_one({"nickname": nickname_receive}))
     return jsonify({'result': 'success', 'exists': exists})
 
+
+@app.route('/writing')
+def write():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+
+        return render_template('write.html')
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+
 ## API 역할을 하는 부분
 @app.route('/owtest/save', methods=['POST'])
 def foodsaving():
-    id = make_id()
+
+    foodid = make_id()
+
+
 ##음식 정보
     name_receive = request.form['name_give']
     group_receive = request.form['group_give']
@@ -120,28 +137,14 @@ def foodsaving():
     save_to = f'static/{filename}.{extension}'
     file.save(save_to)
 
-#
-  #  i = 1
- #   for image in images:
-  #      imagename = str(id) + "_" + str(i) + '.jpg'
-  #      imagename = secure_filename(imagename)  # 이름 검사
- #       image.save(save_to, imagename)  # 저장
-  #      i += 1
 
-        # extension = image.filename.rsplit('.', 1)[1].lower() # 확장자 추출
-        # for compare_extension in ALLOWED_EXTENSIONS:
-        #     if ( compare_extension == extension): # 허용되는 확장자 검사
-        #         imagename = str(id) + "_" + str(i) + extension
-        #         imagename = secure_filename(imagename) # 이름 검사
-        #         image.save(os.path.join(app.config['UPLOAD_FOLDER'], imagename)) # 저장
-        #         i += 1
 
     food_list = list(db.owtest.find({}, {'_id': False}))
     count = len(food_list) + 1
 
 ##음식정보 입력
     doc = {
-        'id': id,
+        'foodid': foodid,
         'name': name_receive,
         'num': count,
         'group': group_receive,
@@ -161,7 +164,7 @@ def make_id():
     t = datetime.now()
 
     #년, 월, 일, 시, 분, 초, 밀리초(앞2자리) 순서대로
-    id = str(t.year)[2:4] +\
+    foodid = str(t.year)[2:4] +\
          t.strftime("%m") +\
          t.strftime("%d") +\
          t.strftime("%H") +\
@@ -169,7 +172,7 @@ def make_id():
          t.strftime("%M") +\
          t.strftime("%S")
 
-    return int(id) #정수로 변환
+    return int(foodid) #정수로 변환
 
 if __name__ == '__main__':
    app.run('0.0.0.0',port=5000,debug=True)
