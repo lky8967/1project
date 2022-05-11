@@ -171,5 +171,31 @@ def make_id():
 
     return int(id) #정수로 변환
 
+
+@app.route("/fridge", methods=["POST"])
+def fridge_post():
+    name_receive = request.form['name_give']
+    star_receive = request.form['star_give']
+    comment_receive = request.form['comment_give']
+    doc = {
+        'name': name_receive,
+        'star': star_receive,
+        'comment': comment_receive
+    }
+    db.fridge.insert_one(doc)
+
+    return jsonify({'msg':'저장 완료!'})
+
+@app.route("/fridge", methods=["GET"])
+def fridge_get():
+    item_list = list(db.fridge.find({}, {'_id': False}))
+    return jsonify({'fridge':item_list})
+
+
+
+
+
+
+
 if __name__ == '__main__':
    app.run('0.0.0.0',port=5000,debug=True)
