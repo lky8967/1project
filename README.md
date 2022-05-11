@@ -1,2 +1,2 @@
 # 1project
-pymongo , dnspython , flask , requestes
+pymongo , dnspython , flask , requestes, certifi
