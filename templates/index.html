@@ -23,7 +23,6 @@
             crossorigin="anonymous"></script>
 
 
-
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
 
@@ -31,7 +30,8 @@
         * {
             font-family: 'Gowun Dodum', sans-serif;
         }
-         .mytitle {
+
+        .mytitle {
             width: 100%;
             height: 250px;
 
@@ -40,7 +40,7 @@
             background-size: auto;
 
 
-             font-family: 'Cute Font', cursive;
+            font-family: 'Cute Font', cursive;
             font-size: 90px;
 
             color: white;
@@ -119,7 +119,7 @@
                 data: {},
                 success: function (response) {
                     let rows = response['fridge']
-                    for (let i = 0; i < rows.length; i++){
+                    for (let i = 0; i < rows.length; i++) {
                         let comment = rows[i]['comment']
                         let title = rows[i]['title']
                         let image = rows[i]['image']
@@ -150,18 +150,34 @@
             })
         }
 
-        function posting() {
-            let name = $('#name').val()
-            let star = $('#star').val()
-            let comment = $('#comment').val()
+         //음식 정보 저장
+        function save_food() {
+            let name = $('#name').val();
+            let group = $('#group').val();
+            let date = $('#date').val();
+            let comment = $('#comment').val();
+            let star = $('#star').val();
+
+            let file = $('#file')[0].files[0]
+            let form_data = new FormData()
+
+            form_data.append("file_give", file)
+            form_data.append("name_give", name)
+            form_data.append("group_give", group)
+            form_data.append("date_give", date)
+            form_data.append("comment_give", comment)
+            form_data.append("star_give", star)
 
             $.ajax({
-                type: 'POST',
-                url: '/fridge',
-                data: {name_give:name, star_give:star,comment_give:comment},
+                type: "POST",
+                url: "/owtest/save",
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
                 success: function (response) {
-                    alert(response['msg'])
-                    window.location.reload()
+                    alert(response["msg"])
+                    window.location.replace("/")
                 }
             });
         }
@@ -187,8 +203,8 @@
     </nav>
 </header>
 <!--title -->
-<div class="mytitle"> what's in my fridge?
-    <button onclick="open_box()">작성하기</button>
+<div class="mytitle"> 오늘 사온 음식을 넣어주세요!
+    <button onclick="open_box()">냉장고에 넣기</button>
 
 </div>
 <div class="btn-box">
@@ -198,6 +214,17 @@
     <div class="form-floating">
         <textarea id="name" class="form-control" placeholder="Leave a name here"></textarea>
         <label for="floatingTextarea2"> 음식이름 </label>
+    </div>
+    <div class="input-group mb-3">
+        <label class="input-group-text" for="inputGroupSelect01">종류</label>
+        <select class="form-select" id="group">
+            <option selected>-- 선택하기 --</option>
+            <option value="과일">과일</option>
+            <option value="채소">채소</option>
+            <option value="음료">음료</option>
+            <option value="물">물</option>
+            <option value="인스턴스">인스턴스</option>
+        </select>
     </div>
     <div class="input-group mb-3">
         <label class="input-group-text" for="inputGroupSelect01">중요도</label>
@@ -211,11 +238,30 @@
         </select>
     </div>
     <div class="form-floating">
-        <textarea id="comment" class="form-control" placeholder="Leave a comment here"></textarea>
-        <label for="floatingTextarea2">내용을 입력하세요</label>
+        <label class="input-group-text" for="inputGroupSelect01">유통기한</label>
+        <input type="date" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+               id="date">
     </div>
+    <div class="form-floating">
+        <textarea id="comment" class="form-control" placeholder="Leave a name here"></textarea>
+        <label for="floatingTextarea2"> 코멘트 </label>
+    </div>
+    <div class="file">
+      <label class="file-label">
+        <input class="file-input" type="file" name="resume" id="file">
+        <span class="file-cta">
+          <span class="file-icon">
+            <i class="fas fa-upload"></i>
+          </span>
+          <span class="file-label">
+            사진 올리기
+          </span>
+        </span>
+      </label>
+    </div>
+
     <div class="mybtns">
-        <button onclick="posting()" type="button" class="btn btn-dark">기록하기</button>
+        <button onclick="save_food()" type="button" class="btn btn-dark">냉장고에 넣기!</button>
         <button onclick="close_box()" type="button" class="btn btn-outline-dark">닫기</button>
     </div>
 </div>
