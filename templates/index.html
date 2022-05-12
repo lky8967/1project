@@ -131,6 +131,29 @@
             height: 400px;
         }
 
+        .input-group-text{
+            color: white;
+        }
+        .file-cta {
+            background-color: #f5f5f5;
+            color: white;
+        }
+        .button level-item has-text-centered is-sparta{
+         color: white;
+         }
+
+        .btn-dark {
+            color: #fff;
+            background-color: #212529;
+            border-color: white;
+        }
+
+        .btn-outline-dark {
+            background-color: transparent;
+            border-color: #e8344e;
+            color: #e8344e !important;
+        }
+
 
     </style>
     <script>
@@ -165,17 +188,16 @@
                                         <div class="card h-100" style="Display: flex ; border-color: #34cde8 ">
                                             <img src="/static/${image}" class="card-img-top" alt="img" >
                                             <div class="card-body">
-                                                <button onclick="deleteFood(${foodid})" id="btn-delete" style="border-radius: 50px; border: 1px solid white; background-color: #f8adad;" >
-                                                    <text>삭제</text>
-                                                </button>
+
                                                 <h5 class="card-title">${name}</h5>
                                                 <p typeof="date" class="card-text">${date}</p>
                                                 <p>${star_image}</p>
                                                 <p class="mycomment">${comment}</p>
-                                                <a class="button level-item has-text-centered is-sparta" id="${foodid}" aria-label="edit" style="background-color: #34cde8"
-                                                   onclick='add_modal_box(${foodid});$("#modal-edit").addClass("is-active");'>
-                                                    수정&nbsp;&nbsp;&nbsp;<span class="icon is-small"><i class="fa fa-pencil"  aria-hidden="true"></i></span>
-                                                </a>
+                                                <nav class="level is-mobile">
+                                                     <button class="level-item button is-sparta" onclick='add_modal_box(${foodid}); $("#modal-edit").addClass("is-active");'>
+                                                      수정 </button>
+                                                      <button class="level-item button is-sparta is-outlined" onclick="deleteFood(${foodid})"> 삭제 </button>
+                                                   <nav>
                                             </div>
                                         </div>
                                     </div>`
@@ -410,7 +432,7 @@
     </div>
     <div class="input-group mb-3">
         <label class="input-group-text" for="inputGroupSelect01"
-               style="padding-right: 43px;  background-color: #34cde8">종류</label>
+               style="padding-right: 43px;   background-color: #34cde8; text-align: center" >종류</label>
         <select class="form-select" id="group">
             <option selected>-- 선택하기 --</option>
             <option value="과일">과일</option>
@@ -421,7 +443,7 @@
         </select>
     </div>
     <div class="input-group mb-3">
-        <label class="input-group-text" for="inputGroupSelect01" style="padding-right: 27px; background-color: #34cde8">중요도</label>
+        <label class="input-group-text" for="inputGroupSelect01" style="padding-right: 27px; background-color: #34cde8;  text-align: center";>중요도</label>
         <select class="form-select" id="star">
             <option selected>-- 선택하기 --</option>
             <option value="1">⭐</option>
