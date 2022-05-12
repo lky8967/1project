@@ -19,7 +19,8 @@ ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg']
 #IMAGE_PATH = #'------s/' #사진 저장된 경로
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 app.config['MAX_CONTENT_LENGTH'] = 500 * 1024
 
 from pymongo import MongoClient
@@ -31,8 +32,8 @@ def home():
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-
-        return render_template('index.html')
+        user_info = db.users.find_one({"username": payload["id"]})
+        return render_template('index.html', user_info=user_info)
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
@@ -55,8 +56,7 @@ def sign_in():
     if result is not None:
         payload = {
          'id': username_receive,
-         # 'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)  # 로그인 24시간 유지
-         'exp': datetime.utcnow() + timedelta(seconds=60)  # 테스트용 60초
+         'exp': datetime.utcnow() + timedelta(seconds= 60 * 10)  # 테스트용 60초
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
@@ -93,75 +93,73 @@ def check_nickname_dup():
     exists = bool(db.users.find_one({"nickname": nickname_receive}))
     return jsonify({'result': 'success', 'exists': exists})
 
+
 ## API 역할을 하는 부분
 @app.route('/owtest/save', methods=['POST'])
 def foodsaving():
-    id = make_id()
-##음식 정보
-    name_receive = request.form['name_give']
-    group_receive = request.form['group_give']
-    date_receive = request.form['date_give']
-    star_receive = request.form['star_give']
-    comment_receive = request.form['comment_give']
+    token_receive = request.cookies.get('mytoken')
 
-##이미지 받기
+    try:
+    ##유저 정보 확인
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"username": payload["id"]})
+    ##음식 정보
+        name_receive = request.form['name_give']
+        group_receive = request.form['group_give']
+        date_receive = request.form['date_give']
+        star_receive = request.form['star_give']
+        comment_receive = request.form['comment_give']
 
-    file = request.files["file_give"]
+        foodid = make_id()
 
-    extension = file.filename.split('.')[-1]
+    ##이미지 받기
 
-##등록시간
-    today = datetime.now()
-    mytime1 = today.strftime('%Y-%m-%d %H:%M')  # 작성시각
-    mytime = today.strftime('%Y-%m-%d-%H-%M-%S')  # 파일업로드시각
-    filename = f'file-{mytime}' #파일이름지정
+        file = request.files["file_give"]
 
-##이미지 저장
-    save_to = f'static/{filename}.{extension}'
-    file.save(save_to)
+        extension = file.filename.split('.')[-1]
 
-#
-  #  i = 1
- #   for image in images:
-  #      imagename = str(id) + "_" + str(i) + '.jpg'
-  #      imagename = secure_filename(imagename)  # 이름 검사
- #       image.save(save_to, imagename)  # 저장
-  #      i += 1
+    ##등록시간
+        today = datetime.now()
+        mytime1 = today.strftime('%Y-%m-%d %H:%M')  # 작성시각
+        mytime = today.strftime('%Y-%m-%d-%H-%M-%S')  # 파일업로드시각
+        filename = f'file-{mytime}' #파일이름지정
 
-        # extension = image.filename.rsplit('.', 1)[1].lower() # 확장자 추출
-        # for compare_extension in ALLOWED_EXTENSIONS:
-        #     if ( compare_extension == extension): # 허용되는 확장자 검사
-        #         imagename = str(id) + "_" + str(i) + extension
-        #         imagename = secure_filename(imagename) # 이름 검사
-        #         image.save(os.path.join(app.config['UPLOAD_FOLDER'], imagename)) # 저장
-        #         i += 1
+    ##이미지 저장
+        save_to = f'static/{filename}.{extension}'
+        file.save(save_to)
 
-    food_list = list(db.owtest.find({}, {'_id': False}))
-    count = len(food_list) + 1
 
-##음식정보 입력
-    doc = {
-        'id': id,
-        'name': name_receive,
-        'num': count,
-        'group': group_receive,
-        'date':date_receive,
-        'star':star_receive,
-        'comment':comment_receive,
-        'mytime1': f'{mytime1}',
-        'file': f'{filename}.{extension}'
-    }
+        food_list = list(db.owtest.find({}, {'_id': False}))
+        count = len(food_list) + 1
 
-    db.owtest.insert_one(doc)
 
-    return jsonify({'msg':'저장이 완료되었습니다!'})
+    ##음식정보 입력
+        doc = {
+            "username": user_info["username"], ##유저 id입력
+            #"profile_name": user_info["nickname"], ##유저 닉네임입력
+            'foodid': foodid,
+            'name': name_receive,
+            'num': count,
+            'group': group_receive,
+            'date':date_receive,
+            'star':star_receive,
+            'comment':comment_receive,
+            'mytime1': f'{mytime1}',
+            'file': f'{filename}.{extension}'
+        }
+
+        db.owtest.insert_one(doc)
+
+        return jsonify({'msg':'저장이 완료되었습니다!'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
 
 #등록한 음식 ID 생성
 def make_id():
     t = datetime.now()
 
     #년, 월, 일, 시, 분, 초, 밀리초(앞2자리) 순서대로
-    id = str(t.year)[2:4] +\
+    foodid = str(t.year)[2:4] +\
          t.strftime("%m") +\
          t.strftime("%d") +\
          t.strftime("%H") +\
@@ -169,7 +167,7 @@ def make_id():
          t.strftime("%M") +\
          t.strftime("%S")
 
-    return int(id) #정수로 변환
+    return int(foodid) #정수로 변환
 
 
 @app.route("/fridge", methods=["POST"])
@@ -188,11 +186,74 @@ def fridge_post():
 
 @app.route("/fridge", methods=["GET"])
 def fridge_get():
-    item_list = list(db.fridge.find({}, {'_id': False}))
+    item_list = list(db.owtest.find({}, {'_id': False}))
     return jsonify({'fridge':item_list})
 
 
 
+<<<<<<< HEAD
+=======
+
+# 수정하기 api
+@app.route('/update_profile', methods=['POST'])
+def update_food():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        username = payload["id"]
+
+
+        name_receive = request.form["name_give"]
+        comment_receive = request.form["comment_give"]
+        group_receive = request.form['group_give']
+        date_receive = request.form['date_give']
+        star_receive = request.form['star_give']
+        file = request.files["file_give"]
+
+        extension = file.filename.split('.')[-1]
+
+        today = datetime.now()
+        mytime = today.strftime('%Y-%M-%d-%H-%M-%S')
+
+        filename = f'file-{mytime}'
+
+        save_to = f'static/{filename}.{extension}'
+        file.save(save_to)
+
+        food_doc = {
+            "name": name_receive,
+            "comment": comment_receive,
+            "group":group_receive,
+            "date":date_receive,
+            "star":star_receive,
+            # 'mytime1': f'{mytime1}',
+            'file': f'{filename}.{extension}'
+        }
+        print(food_doc)
+
+        db.owtest.update_one({}, {'$set':food_doc})
+        return jsonify({"result": "success", 'msg': '수정하였습니다.'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+
+
+
+# 삭제하기
+@app.route("/api/foodDelete", methods=["POST"])
+def food_delete():
+    num_receive = request.form['num_give']
+    db.owtest.delete_one({'num': int(num_receive)})
+
+    return jsonify({'msg':'삭제완료 !'})
+
+
+
+
+
+
+
+
+>>>>>>> 19173e04200e072f5ac8d3ffa755c273ad49fefc
 if __name__ == '__main__':
    app.run('0.0.0.0',port=5000,debug=True)
 
