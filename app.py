@@ -190,6 +190,8 @@ def fridge_get():
     return jsonify({'fridge':item_list})
 
 
+
+
 # 수정하기 api
 @app.route('/update_profile', methods=['POST'])
 def update_food():
@@ -243,6 +245,11 @@ def food_delete():
     return jsonify({'msg':'삭제완료 !'})
 
 
+
+
+
+
+
+
 if __name__ == '__main__':
    app.run('0.0.0.0',port=5000,debug=True)
-
