@@ -56,8 +56,7 @@ def sign_in():
     if result is not None:
         payload = {
          'id': username_receive,
-          'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)  # 로그인 24시간 유지
-         #'exp': datetime.utcnow() + timedelta(seconds=60)  # 테스트용 60초
+         'exp': datetime.utcnow() + timedelta(seconds= 60 * 10)  # 테스트용 60초
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
@@ -95,8 +94,6 @@ def check_nickname_dup():
     return jsonify({'result': 'success', 'exists': exists})
 
 
-
-
 ## API 역할을 하는 부분
 @app.route('/owtest/save', methods=['POST'])
 def foodsaving():
@@ -112,7 +109,6 @@ def foodsaving():
         date_receive = request.form['date_give']
         star_receive = request.form['star_give']
         comment_receive = request.form['comment_give']
-
 
         foodid = make_id()
 
