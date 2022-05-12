@@ -56,8 +56,8 @@ def sign_in():
     if result is not None:
         payload = {
          'id': username_receive,
-         # 'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)  # 로그인 24시간 유지
-         'exp': datetime.utcnow() + timedelta(seconds=60)  # 테스트용 60초
+          'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)  # 로그인 24시간 유지
+         #'exp': datetime.utcnow() + timedelta(seconds=60)  # 테스트용 60초
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
@@ -137,8 +137,6 @@ def foodsaving():
     save_to = f'static/{filename}.{extension}'
     file.save(save_to)
 
-
-
     food_list = list(db.owtest.find({}, {'_id': False}))
     count = len(food_list) + 1
 
@@ -191,8 +189,64 @@ def fridge_post():
 
 @app.route("/fridge", methods=["GET"])
 def fridge_get():
-    item_list = list(db.fridge.find({}, {'_id': False}))
+    item_list = list(db.owtest.find({}, {'_id': False}))
     return jsonify({'fridge':item_list})
+
+
+
+
+# 수정하기 api
+@app.route('/update_profile', methods=['POST'])
+def update_food():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        username = payload["id"]
+
+
+        name_receive = request.form["name_give"]
+        comment_receive = request.form["comment_give"]
+        group_receive = request.form['group_give']
+        date_receive = request.form['date_give']
+        star_receive = request.form['star_give']
+        file = request.files["file_give"]
+
+        extension = file.filename.split('.')[-1]
+
+        today = datetime.now()
+        mytime = today.strftime('%Y-%M-%d-%H-%M-%S')
+
+        filename = f'file-{mytime}'
+
+        save_to = f'static/{filename}.{extension}'
+        file.save(save_to)
+
+        food_doc = {
+            "name": name_receive,
+            "comment": comment_receive,
+            "group":group_receive,
+            "date":date_receive,
+            "star":star_receive,
+            # 'mytime1': f'{mytime1}',
+            'file': f'{filename}.{extension}'
+        }
+        print(food_doc)
+
+        db.owtest.update_one({}, {'$set':food_doc})
+        return jsonify({"result": "success", 'msg': '수정하였습니다.'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+
+
+
+# 삭제하기
+@app.route("/api/foodDelete", methods=["POST"])
+def food_delete():
+    num_receive = request.form['num_give']
+    db.owtest.delete_one({'num': int(num_receive)})
+
+    return jsonify({'msg':'삭제완료 !'})
+
 
 
 
