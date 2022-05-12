@@ -14,6 +14,7 @@
     <!-- Font Awesome CSS -->
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
+
     <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -94,7 +95,7 @@
             max-width: 500px;
             margin: 20px auto 0px auto;
             padding: 20px;
-            box-shadow: 0px 0px 3px 0px gray;
+            box-shadow: 0px 0px 3px 0px #34cde8;
 
             display: none;
         }
@@ -113,11 +114,25 @@
         }
 
         .modal-content{
-            width: 50%;
-            height: 82%;
+            width: 30%;
+            height: 70%;
+            /*width: 100px;*/
+            /*height: 2000px;*/
             margin: 0;
             padding: 0;
         }
+        .btn btn-dark{
+            border-color: #34cde8;
+        }
+
+        .btn btn-outline-dark{
+             border-color: #34cde8;
+         }
+        .card-img-top{
+            width: 300px;
+            height: 400px;
+        }
+
 
 
     </style>
@@ -150,17 +165,17 @@
                         let star_image = '⭐'.repeat(star)
 
                         let temp_html = `<div class="col">
-                                        <div class="card h-100" style="Display: flex">
+                                        <div class="card h-100" style="Display: flex ; border-color: #34cde8 ">
                                             <img src="/static/${image}" class="card-img-top" alt="img" >
                                             <div class="card-body">
-                                                <button onclick="deleteFood(${num})" id="btn-delete" >
-                                                    <i class="fa fa-trash-can" aria-hidden="true"></i>
+                                                <button onclick="deleteFood(${num})" id="btn-delete" style="border-radius: 50px; border: 1px solid white; background-color: #f8adad;" >
+                                                    <text>삭제</text>
                                                 </button>
                                                 <h5 class="card-title">${name}</h5>
                                                 <p typeof="date" class="card-text">${date}</p>
                                                 <p>${star_image}</p>
                                                 <p class="mycomment">${comment}</p>
-                                                <a class="button level-item has-text-centered is-sparta" id="${num}" aria-label="edit"
+                                                <a class="button level-item has-text-centered is-sparta" id="${num}" aria-label="edit" style="background-color: #34cde8"
                                                    onclick='$("#modal-edit").addClass("is-active");${num}'>
                                                     수정&nbsp;&nbsp;&nbsp;<span class="icon is-small"><i class="fa fa-pencil"  aria-hidden="true"></i></span>
                                                 </a>
@@ -245,8 +260,12 @@
 
             if(name == ''){
                 alert('이름을 입력해주세요')
-            }else if (date == '') {
-                alert('날짜를 입력해주세요')
+            }else if (group == '-- 선택하기 --'){
+                alert('종류를 선택해주세요')
+            } else if (star == '-- 선택하기 --'){
+                alert('중요도를 선택해주세요')
+            } else if (date == '') {
+                alert('날짜를 선택해주세요')
             }else if (file == null) {
                 alert('사진을 등록해주세요')
             }else if ( comment == '') {
@@ -310,13 +329,13 @@
 
 </div>
 
-<div class="mypost" id="post-box">
+<div class="mypost" id="post-box"  >
     <div class="form-floating">
-        <textarea id="name" class="form-control" placeholder="Leave a name here"></textarea>
+        <textarea id="name" class="form-control" placeholder="Leave a name here" style="margin-bottom: 17px"></textarea>
         <label for="floatingTextarea2"> 음식이름 </label>
     </div>
     <div class="input-group mb-3">
-        <label class="input-group-text" for="inputGroupSelect01">종류</label>
+        <label class="input-group-text" for="inputGroupSelect01" style="padding-right: 43px;  background-color: #34cde8">종류</label>
         <select class="form-select" id="group">
             <option selected>-- 선택하기 --</option>
             <option value="과일">과일</option>
@@ -327,7 +346,7 @@
         </select>
     </div>
     <div class="input-group mb-3">
-        <label class="input-group-text" for="inputGroupSelect01">중요도</label>
+        <label class="input-group-text" for="inputGroupSelect01" style="padding-right: 27px; background-color: #34cde8">중요도</label>
         <select class="form-select" id="star">
             <option selected>-- 선택하기 --</option>
             <option value="1">⭐</option>
@@ -337,23 +356,36 @@
             <option value="5">⭐⭐⭐⭐⭐</option>
         </select>
     </div>
-    <div class="form-date">
-        <label class="input-group-text" for="inputGroupSelect01">유통기한</label>
-        <input type="date" class="date-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
-               id="date">
+<!--    <div class="form-date">-->
+<!--        <label class="input-group-text" for="inputGroupSelect01" style="background-color: #34cde8 ">유통기한</label>-->
+<!--        <input type="date" class="date-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"-->
+<!--               id="date">-->
+<!--    </div>-->
+
+        <div class="input-group input-group-sm mb-3">
+        <div class="size">
+            <div class="labelBox">
+                <span class="input-group-text" style="background-color: #34cde8" style="padding-right: 10px">유통기한</span>
+            </div>
+        </div>
+        <input type="date" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" id="date">
     </div>
+
+
+
+
     <div class="form-floating">
         <textarea id="comment" class="form-control" placeholder="Leave a name here"></textarea>
         <label for="floatingTextarea2"> 코멘트 </label>
     </div>
     <div class="file">
-        <label class="file-label">
-            <input class="file-input" type="file" name="resume" id="file">
-            <span class="file-cta">
-          <span class="file-icon">
-            <i class="fas fa-upload"></i>
-          </span>
-          <span class="file-label">
+        <label class="file-label" >
+            <input class="file-input" type="file" name="resume" id="file" style="background-color: #34cde8">
+            <span class="file-cta" style="background-color: #34cde8;margin-top: 15px;">
+<!--          <span class="file-icon"style="background-color: #34cde8">-->
+<!--            <i class="fas fa-upload"></i>-->
+<!--          </span>-->
+          <span class="file-label" style="background-color: #34cde8">
             사진 올리기
           </span>
         </span>
@@ -361,7 +393,7 @@
     </div>
 
     <div class="mybtns">
-        <button onclick="save_food()" type="button" class="btn btn-dark">냉장고에 넣기!</button>
+        <button onclick="save_food()" type="button" class="btn btn-dark" style="background-color: #34cde8">냉장고에 넣기!</button>
         <button onclick="close_box()" type="button" class="btn btn-outline-dark">닫기</button>
     </div>
 </div>
@@ -385,33 +417,10 @@
                                            placeholder="" value="{{name}}">
                                 </p>
                             </div>
-                            <!--유통기한-->
-                                <div class="input-group input-group-sm mb-3">
-                                    <div class="size">
-                                        <div class="labelBox">
-                                            <span class="input-group-text">유통기한</span>
-                                        </div>
-                                    </div>
-                                    <input type="date" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" id="input_date">
-                                </div>
-                            <!-- 별표 (우선도 )-->
-                                 <div class="labelBox">
-                                        <label class="input-group-text" for="star">우선도</label>
-                                        <select class="form-select" id="input_star">
-{#                                            <option selected>-- 선택하기 --</option>#}
-                                            <option value="1">⭐</option>
-                                            <option value="2">⭐⭐</option>
-                                            <option value="3">⭐⭐⭐</option>
-                                            <option value="4">⭐⭐⭐⭐</option>
-                                            <option value="5">⭐⭐⭐⭐⭐</option>
-                                        </select>
-                                 </div>
-
-                                {#   종류 #}
                                 <div class="input-group mb-3">
-                                    <label class="input-group-text" for="inputGroupSelect01">종류</label>
+                                    <label class="input-group-text" for="inputGroupSelect01" style="padding-right: 36px; background-color: #34cde8">종 류</label>
                                     <select class="form-select" id="input_group">
-{#                                        <option selected>-- 선택하기 --</option>#}
+                                        <option selected>-- 선택하기 --</option>
                                         <option value="과일">과일</option>
                                         <option value="채소">채소</option>
                                         <option value="음료">음료</option>
@@ -419,34 +428,67 @@
                                         <option value="인스턴스">인스턴스</option>
                                     </select>
                                 </div>
+                                <!-- 별표 (중요도 )-->
+                                 <div class="input-group mb-3">
+                                        <label class="input-group-text" for="star" style="padding-right: 28px;  background-color: #34cde8">중요도</label>
+                                        <select class="form-select" id="input_star">
+                                            <option selected>-- 선택하기 --</option>
+                                            <option value="1">⭐</option>
+                                            <option value="2">⭐⭐</option>
+                                            <option value="3">⭐⭐⭐</option>
+                                            <option value="4">⭐⭐⭐⭐</option>
+                                            <option value="5">⭐⭐⭐⭐⭐</option>
+                                        </select>
+                                 </div>
+                            <!--유통기한-->
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="size">
+                                        <div class="labelBox">
+                                            <span class="input-group-text" style="background-color: #34cde8">유통기한</span>
+                                        </div>
+                                    </div>
+                                    <input type="date" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" id="input_date">
+                                </div>
 
                             <!--  사진 올리기-->
-                            <div class="field">
-                                <label class="label" for="input-pic">사진</label>
-                                <div class="control is-expanded">
-                                    <div class="file has-name">
-                                        <label class="file-label" style="width:100%">
-                                            <input id="input_file" class="file-input" type="file"
-                                                   name="resume">
-                                            <span class="file-cta"><span class="file-icon"><i
-                                                    class="fa fa-upload"></i></span>
-                                <span class="file-label">파일 선택</span>
-                            </span>
-                                            <span id="file-name" class="file-name"
-                                                  style="width:100%;max-width:100%"></span>
-                                        </label>
-                                    </div>
+<!--                            <div class="field" >-->
+<!--                                <label class="label" for="input-pic">사진</label>-->
+<!--                                <div class="control is-expanded">-->
+<!--                                    <div class="file has-name" >-->
+<!--                                        <label class="file-label" style="width:100%" >-->
+<!--                                            <input id="input_file" class="file-input" type="file" name="resume">-->
+<!--                                            <span class="file-cta"><span class="file-icon" ><i-->
+<!--                                                    class="fa fa-upload" ></i></span>-->
+<!--                                <span class="file-label">사진 올리기</span>-->
+<!--                            </span>-->
+<!--&lt;!&ndash;                                            <span id="file-name" class="file-name"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                  style="width:100%;max-width:100%"></span>&ndash;&gt;-->
+<!--                                        </label>-->
+<!--                                    </div>-->
 
+<!--                                </div>-->
+<!--                            </div>-->
+
+                               <div class="file" >
+                                    <label class="file-label" >
+                                        <input class="file-input" type="file" name="resume" id="input_file" style="background-color: #34cde8">
+                                        <span class="file-cta" style="background-color: #34cde8;margin-top: 5px;">
+<!--                                      <span class="file-icon"style="background-color: #34cde8">-->
+<!--                                        <i class="fas fa-upload"></i>-->
+<!--                                      </span>-->
+                                      <span class="file-label" style="background-color: #34cde8" >
+                                        사진 올리기
+                                      </span>
+                                    </span>
+                                    </label>
                                 </div>
-                            </div>
 
-                            <!--   코멘트-->
+
+                                                        <!--   코멘트-->
                             <div class="field">
                                 <label class="label" for="textarea-about">comment</label>
                                 <p class="control">
-
-                        <textarea id="input_comment" class="textarea"
-                                  placeholder="" value="comment"></textarea>
+                                    <textarea id="input_comment" class="textarea" placeholder="" value="comment"></textarea>
                                 </p>
                             </div>
 
@@ -456,11 +498,10 @@
                                 </div>
                                 <div class="level-right">
                                     <div class="level-item">
-                                        <a class="button is-sparta" onclick="update_foodlist()">업데이트</a>
+                                        <a class="button is-sparta" style="background-color: #34cde8" onclick="update_foodlist()">업데이트</a>
                                     </div>
                                     <div class="level-item">
-                                        <a class="button is-sparta is-outlined"
-                                           onclick='$("#modal-edit").removeClass("is-active")'>취소</a>
+                                        <a class="button is-sparta is-outlined" onclick='$("#modal-edit").removeClass("is-active")'>취소</a>
                                     </div>
 
                                 </div>
