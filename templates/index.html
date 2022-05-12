@@ -4,47 +4,71 @@
 <head>
 
     <!-- Webpage Title -->
-    <title>what's in my fridge</title>
+    <title>나의 냉장고엔 뭐가 있을까?</title>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <!-- Bulma CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
     <!-- Font Awesome CSS -->
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
     <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-    <script src="/path/to/jquery.js"></script>
-    <script src="/path/to/jquery.cookie.js"></script>
 
-
+<<<<<<< HEAD
 
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+=======
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&display=swap" rel="stylesheet">
+>>>>>>> 7689420f3a46d5aaccc516fc383a001b0c5bcacc
 
     <style>
         * {
-            font-family: 'Gowun Dodum', sans-serif;
+            font-family: 'Nanum Gothic Coding', monospace;
         }
+<<<<<<< HEAD
          .mytitle {
             width: 100%;
             height: 250px;
+=======
 
-            background-image: url('https://i.pinimg.com/564x/e3/ce/32/e3ce328b2407f2c3c233702455bc4c95.jpg');
-            background-position: center;
-            background-size: auto;
+        body {
+            #background-color: white;
+            min-height: 100vh;
+        }
+>>>>>>> 7689420f3a46d5aaccc516fc383a001b0c5bcacc
 
+        .hero {
+            background-color: #34cde8;
+        }
 
+        .login_text {
+            color: black;
+        }
+
+<<<<<<< HEAD
              font-family: 'Cute Font', cursive;
             font-size: 90px;
+=======
+        .mytitle {
+            width: 100%;
+            height: 150px;
+            font-weight: 800;
+            font-size: 70px;
+>>>>>>> 7689420f3a46d5aaccc516fc383a001b0c5bcacc
 
             color: white;
 
@@ -54,28 +78,23 @@
             justify-content: center;
         }
 
-        .mytitle > button {
-            width: 200px;
-            height: 50px;
-            font-family: 'Cute Font', cursive;
-            font-size: 30px;
-
-
-            background-color: transparent;
+        .hero > button {
+            width: 300px;
+            height: 80px;
+            font-size: 37px;
+            font-weight: 800;
+            background-color: #34cde8;
             color: white;
 
             border-radius: 50px;
             border: 1px solid white;
 
-            margin-top: 10px;
+            margin: auto;
+            margin-bottom: 30px;
         }
 
         .mytitle > button:hover {
             border: 2px solid white;
-        }
-
-        .mycomment {
-            color: gray;
         }
 
         .mycards {
@@ -90,12 +109,10 @@
             max-width: 500px;
             margin: 20px auto 0px auto;
             padding: 20px;
-            box-shadow: 0px 0px 3px 0px gray;
-
+            box-shadow: 0px 0px 3px 0px #34cde8;
 
             display: none;
         }
-
 
         .mybtns {
             display: flex;
@@ -109,6 +126,29 @@
         .mybtns > button {
             margin-right: 10px;
         }
+
+        .modal-content {
+            width: 30%;
+            height: 70%;
+
+            margin: 0;
+            padding: 0;
+        }
+
+        .btn btn-dark {
+            border-color: #34cde8;
+        }
+
+        .btn btn-outline-dark {
+            border-color: #34cde8;
+        }
+
+        .card-img-top {
+            width: 300px;
+            height: 400px;
+        }
+
+
     </style>
     <script>
         $(document).ready(function () {
@@ -124,37 +164,40 @@
         function listing() {
             $.ajax({
                 type: 'GET',
-                url: '/fridge',
+                url: 'foodinfo/get',
                 data: {},
                 success: function (response) {
+                    console.log(response)
                     let rows = response['fridge']
                     for (let i = 0; i < rows.length; i++){
                         let comment = rows[i]['comment']
-                        let title = rows[i]['title']
-                        let image = rows[i]['image']
-                        let desc = rows[i]['desc']
+                        let name = rows[i]['name']
+                        let image = rows[i]['file']
+                        let date = rows[i]['date']
                         let star = rows[i]['star']
-
+                        let foodid = rows[i]['foodid']
                         let star_image = '⭐'.repeat(star)
 
                         let temp_html = `<div class="col">
-                                        <div class="card h-100">
-                                            <img src="${image}"
-                                                 class="card-img-top">
+                                        <div class="card h-100" style="Display: flex ; border-color: #34cde8 ">
+                                            <img src="/static/${image}" class="card-img-top" alt="img" >
                                             <div class="card-body">
-                                                <h5 class="card-title">${title}</h5>
-                                                <p class="card-text">${desc}</p>
+                                                <button onclick="deleteFood(${foodid})" id="btn-delete" style="border-radius: 50px; border: 1px solid white; background-color: #f8adad;" >
+                                                    <text>삭제</text>
+                                                </button>
+                                                <h5 class="card-title">${name}</h5>
+                                                <p typeof="date" class="card-text">${date}</p>
                                                 <p>${star_image}</p>
                                                 <p class="mycomment">${comment}</p>
+                                                <a class="button level-item has-text-centered is-sparta" id="${foodid}" aria-label="edit" style="background-color: #34cde8"
+                                                   onclick='add_modal_box(${foodid});$("#modal-edit").addClass("is-active");'>
+                                                    수정&nbsp;&nbsp;&nbsp;<span class="icon is-small"><i class="fa fa-pencil"  aria-hidden="true"></i></span>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>`
-
                         $('#cards-box').append(temp_html)
-
                     }
-
-                    console.log()
                 }
             })
         }
@@ -185,14 +228,174 @@
 >>>>>>> 6bf5673d9776be3d04d16728fd66618fa4ff32f9
 
             $.ajax({
+<<<<<<< HEAD
                 type: 'POST',
                 url: '/fridge',
                 data: {name_give:name, star_give:star,comment_give:comment},
                 success: function (response) {
                     alert(response['msg'])
                     window.location.reload()
+=======
+                type: "POST",
+                url: "/foodinfo/save",
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload()
                 }
             });
+        }
+
+        function deleteFood(foodid) {
+            $.ajax({
+                type: "POST",
+                url: "/foodinfo/delete",
+                data: {foodid_give: foodid},
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload()
+                }
+            });
+        }
+
+        function update_foodinfo(foodid) {
+
+            let name = $('#input_name').val();
+            let group = $('#input_group').val();
+            let date = $('#input_date').val();
+            let comment = $('#input_comment').val();
+            let star = $('#input_star').val();
+
+            let file = $('#input_file')[0].files[0]
+
+            let update_data = new FormData()
+            update_data.append("foodid_give", foodid)
+            update_data.append("name_give", name)
+            update_data.append("comment_give", comment)
+            update_data.append("group_give", group)
+            update_data.append("date_give", date)
+            update_data.append("star_give", star)
+            update_data.append("file_give", file)
+
+            if (name == '') {
+                alert('이름을 입력해주세요')
+            } else if (group == '-- 선택하기 --') {
+                alert('종류를 선택해주세요')
+            } else if (star == '-- 선택하기 --') {
+                alert('중요도를 선택해주세요')
+            } else if (date == '') {
+                alert('날짜를 선택해주세요')
+            } else if (file == null) {
+                alert('사진을 등록해주세요')
+            } else if (comment == '') {
+                alert('코멘트를 입력해주세요')
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/foodinfo/update",
+                contentType: false,
+                processData: false,
+                data: update_data,
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        alert(response["msg"])
+                        window.location.reload()
+                    }
+>>>>>>> 7689420f3a46d5aaccc516fc383a001b0c5bcacc
+                }
+            });
+        }
+
+        function add_modal_box(foodid) {
+            let temp_html = `<div class="box">
+                                <article class="media">
+                                    <div class="media-content">
+                                    <!-- 음식 이름-->
+                                        <div class="field">
+                                            <label class="label" for="name">이름</label>
+                                            <p class="control">
+                                                <input id="input_name" class="input"
+                                                       placeholder="" value="{{name}}">
+                                            </p>
+                                        </div>
+                                            <div class="input-group mb-3">
+                                                <label class="input-group-text" for="inputGroupSelect01" style="padding-right: 36px; background-color: #34cde8">종 류</label>
+                                                <select class="form-select" id="input_group">
+                                                    <option selected>-- 선택하기 --</option>
+                                                    <option value="과일">과일</option>
+                                                    <option value="채소">채소</option>
+                                                    <option value="음료">음료</option>
+                                                    <option value="물">물</option>
+                                                    <option value="인스턴스">인스턴스</option>
+                                                </select>
+                                            </div>
+                                            <!-- 별표 (중요도 )-->
+                                             <div class="input-group mb-3">
+                                                    <label class="input-group-text" for="star" style="padding-right: 28px;  background-color: #34cde8">중요도</label>
+                                                    <select class="form-select" id="input_star">
+                                                        <option selected>-- 선택하기 --</option>
+                                                        <option value="1">⭐</option>
+                                                        <option value="2">⭐⭐</option>
+                                                        <option value="3">⭐⭐⭐</option>
+                                                        <option value="4">⭐⭐⭐⭐</option>
+                                                        <option value="5">⭐⭐⭐⭐⭐</option>
+                                                    </select>
+                                             </div>
+                                        <!--유통기한-->
+                                            <div class="input-group input-group-sm mb-3">
+                                                <div class="size">
+                                                    <div class="labelBox">
+                                                        <span class="input-group-text" style="background-color: #34cde8">유통기한</span>
+                                                    </div>
+                                                </div>
+                                                <input type="date" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" id="input_date">
+                                            </div>
+
+                                           <div class="file" >
+                                                <label class="file-label" >
+                                                    <input class="file-input" type="file" name="resume" id="input_file" style="background-color: #34cde8">
+                                                    <span class="file-cta" style="background-color: #34cde8;margin-top: 5px;">
+                                                  <span class="file-label" style="background-color: #34cde8" >
+                                                    사진 올리기
+                                                  </span>
+                                                </span>
+                                                </label>
+                                            </div>
+
+                                        <div class="field">
+                                            <label class="label" for="textarea-about">comment</label>
+                                            <p class="control">
+                                                <textarea id="input_comment" class="textarea" placeholder="" value="comment"></textarea>
+                                            </p>
+                                        </div>
+
+                                        <nav class="level is-mobile">
+                                            <div class="level-left">
+                                            </div>
+                                            <div class="level-right">
+                                                <div class="level-item">
+                                                    <a class="button is-sparta" style="background-color: #34cde8" onclick="update_foodinfo(${foodid})">업데이트</a>
+                                                </div>
+                                                <div class="level-item">
+                                                    <a class="button is-sparta is-outlined"
+                                                     onclick='delete_modal_box(); $("#modal-edit").removeClass("is-active")'>취소</a>
+                                                </div>
+
+                                            </div>
+                                        </nav>
+                                    </div>
+                                </article>
+                            </div>
+                            `
+            $('.modal-content').append(temp_html)
+        }
+
+        function delete_modal_box() {
+            $('.modal-content').empty();
         }
 
         function open_box() {
@@ -202,6 +405,12 @@
         function close_box() {
             $('#post-box').hide()
         }
+
+        function sign_out() {
+            $.removeCookie('mytoken', {path: '/'});
+            window.location.href = "/login"
+        }
+
     </script>
 </head>
 
@@ -210,26 +419,51 @@
 <header class="nav">
     <nav>
         <div>
-            <button class='btn-login headers' onclick="location.href='/profile'">정보수정</button>
-            <button class="btn-mypg" onclick="location.href='/reg'">로그아웃</button>
+            <h5 class="login_text" style="display: inline">안녕하세요 {{ user_info.nickname }} 님</h5>
+            <button class="btn-mypg" onclick="sign_out()">로그아웃</button>
         </div>
     </nav>
 </header>
 <!--title -->
+<<<<<<< HEAD
 <div class="mytitle"> what's in my fridge?
     <button onclick="open_box()">작성하기</button>
+=======
+<section class="hero ">
+    <div class="hero-body has-text-centered" style="padding-bottom:1rem;margin:auto;">
+        <h1 class="mytitle is-sparta">오늘 사온 음식을 넣어주세요!</h1>
+    </div>
+    <button onclick="open_box()">기록하기</button>
+</section>
+>>>>>>> 7689420f3a46d5aaccc516fc383a001b0c5bcacc
 
-</div>
 <div class="btn-box">
 
 </div>
+
 <div class="mypost" id="post-box">
     <div class="form-floating">
-        <textarea id="name" class="form-control" placeholder="Leave a name here"></textarea>
+        <textarea id="name" class="form-control" placeholder="Leave a name here" style="margin-bottom: 17px"></textarea>
         <label for="floatingTextarea2"> 음식이름 </label>
     </div>
     <div class="input-group mb-3">
+<<<<<<< HEAD
         <label class="input-group-text" for="inputGroupSelect01">중요도</label>
+=======
+        <label class="input-group-text" for="inputGroupSelect01"
+               style="padding-right: 43px;  background-color: #34cde8">종류</label>
+        <select class="form-select" id="group">
+            <option selected>-- 선택하기 --</option>
+            <option value="과일">과일</option>
+            <option value="채소">채소</option>
+            <option value="음료">음료</option>
+            <option value="물">물</option>
+            <option value="인스턴스">인스턴스</option>
+        </select>
+    </div>
+    <div class="input-group mb-3">
+        <label class="input-group-text" for="inputGroupSelect01" style="padding-right: 27px; background-color: #34cde8">중요도</label>
+>>>>>>> 7689420f3a46d5aaccc516fc383a001b0c5bcacc
         <select class="form-select" id="star">
             <option selected>-- 선택하기 --</option>
             <option value="1">⭐</option>
@@ -240,6 +474,7 @@
         </select>
     </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
     <div class="form-floating">
         <textarea id="comment" class="form-control" placeholder="Leave a comment here"></textarea>
         <label for="floatingTextarea2">내용을 입력하세요</label>
@@ -249,19 +484,36 @@
         <label class="input-group-text" for="inputGroupSelect01">유통기한</label>
         <input type="date" class="date-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
                id="date">
+=======
+    <!--    <div class="form-date">-->
+    <!--        <label class="input-group-text" for="inputGroupSelect01" style="background-color: #34cde8 ">유통기한</label>-->
+    <!--        <input type="date" class="date-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"-->
+    <!--               id="date">-->
+    <!--    </div>-->
+
+    <div class="input-group input-group-sm mb-3">
+        <div class="size">
+            <div class="labelBox">
+                <span class="input-group-text" style="background-color: #34cde8" style="padding-right: 10px">유통기한</span>
+            </div>
+        </div>
+        <input type="date" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" id="date">
+>>>>>>> 7689420f3a46d5aaccc516fc383a001b0c5bcacc
     </div>
+
+
     <div class="form-floating">
         <textarea id="comment" class="form-control" placeholder="Leave a name here"></textarea>
         <label for="floatingTextarea2"> 코멘트 </label>
     </div>
     <div class="file">
         <label class="file-label">
-            <input class="file-input" type="file" name="resume" id="file">
-            <span class="file-cta">
-          <span class="file-icon">
-            <i class="fas fa-upload"></i>
-          </span>
-          <span class="file-label">
+            <input class="file-input" type="file" name="resume" id="file" style="background-color: #34cde8">
+            <span class="file-cta" style="background-color: #34cde8;margin-top: 15px;">
+<!--          <span class="file-icon"style="background-color: #34cde8">-->
+                <!--            <i class="fas fa-upload"></i>-->
+                <!--          </span>-->
+          <span class="file-label" style="background-color: #34cde8">
             사진 올리기
           </span>
         </span>
@@ -270,7 +522,12 @@
 
 >>>>>>> 6bf5673d9776be3d04d16728fd66618fa4ff32f9
     <div class="mybtns">
+<<<<<<< HEAD
         <button onclick="posting()" type="button" class="btn btn-dark">기록하기</button>
+=======
+        <button onclick="save_food()" type="button" class="btn btn-dark" style="background-color: #34cde8">냉장고에 넣기!
+        </button>
+>>>>>>> 7689420f3a46d5aaccc516fc383a001b0c5bcacc
         <button onclick="close_box()" type="button" class="btn btn-outline-dark">닫기</button>
     </div>
 </div>
@@ -279,6 +536,20 @@
     </div>
 </div>
 
+<!--        수정 하기 모달-->
+<div class="modal" id="modal-edit">
+    <div class="modal-background" onclick='delete_modal_box(); $("#modal-edit").removeClass("is-active")'></div>
+    <div class="modal-content">
+
+    </div>
+    <button class="modal-close is-large" aria-label="close"
+            onclick='delete_modal_box(); $("#modal-edit").removeClass("is-active")'></button>
+</div>
+
+</div>
+<button class="modal-close is-large" aria-label="close"
+        onclick='delete_modal_box(); $("#modal-edit").removeClass("is-active")'></button>
+</div>
 </body>
 
 </html>
