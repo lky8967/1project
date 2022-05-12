@@ -137,7 +137,7 @@ def foodsaving():
     ##음식정보 입력
         doc = {
             "username": user_info["username"], ##유저 id입력
-            #"profile_name": user_info["nicname"], ##유저 닉네임입력
+            #"profile_name": user_info["nickname"], ##유저 닉네임입력
             'foodid': foodid,
             'name': name_receive,
             'num': count,
