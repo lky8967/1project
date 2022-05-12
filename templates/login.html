@@ -3,7 +3,7 @@
 <head>
 
     <!-- Webpage Title -->
-    <title>Log In | SWEETER</title>
+    <title>Log In | 나의 냉장고</title>
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -68,9 +68,6 @@
 
     </style>
     <script>
-        // {% if msg %}
-        //     alert("{{ msg }}")
-        // {% endif %}
         function sign_in() {
             let username = $("#input-username").val()
             let password = $("#input-password").val()
@@ -115,7 +112,6 @@
             let password2 = $("#input-password2").val()
             let nickname = $("input-nickname").val()
             console.log(username, password, password2, nickname)
-
 
             if ($("#help-id").hasClass("is-danger")) {
                 alert("아이디를 다시 확인해주세요.")
