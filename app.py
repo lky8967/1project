@@ -175,7 +175,6 @@ def get_food():
     token_receive = request.cookies.get('mytoken')
     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
     food_list = list(db.foodinfo.find({"username": payload["id"]}, {'_id': False}))
-
     return jsonify({'fridge':food_list})
 
 # 수정하기 api
