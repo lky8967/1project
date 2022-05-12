@@ -1,0 +1,100 @@
+.nav {
+    background: none;
+    color: black;
+    padding-left: 32px;
+    padding-right: 32px;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    position: sticky;
+    z-index: 99;
+    padding-top: 15px;
+    top: 0;
+    opacity: 0.8;
+    backdrop-filter: blur(30px);
+}
+
+.nav_ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.nav_li {
+    display: inline-block;
+    margin-left: 16px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.nav_link {
+    text-decoration: none;
+    color: black;
+    margin-left: 20px;
+    margin-bottom: 5px;
+}
+
+.headers {
+    background-color: transparent;
+    border: transparent;
+}
+
+.btn-login {
+    background-color: transparent;
+    border: transparent;
+}
+
+.btn-mypg {
+    background-color: transparent;
+    border: transparent;
+}
+
+.cardStar {
+    text-align: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.storeName {
+    text-align: center;
+    list-style: none;
+    margin: 0;
+    padding: 3px;
+    text-decoration-style: solid;
+}
+
+.card {
+    border: #534340 solid 2px;
+    box-shadow: 0px 0px 1px 0px #AD8B73;
+}
+
+.cardLeft {
+    text-align: left;
+    list-style: none;
+    box-shadow: 0px 0px 1px 0px #AD8B73;
+}
+
+.cardLast {
+    text-align: center;
+}
+
+.button.is-sparta.is-outlined {
+    background-color: transparent; border-color: #e8344e; color: #e8344e !important;
+}
+
+.btn-dark {
+    color: #fff;
+    background-color: #212529;
+    border-color: white;
+}
+
+.button.is-sparta {
+    background-color: #34cde8;
+    border-color: transparent;
+    color: #fff !important;
+}
+.button.is-sparta.is-outlined {
+    background-color: transparent;
+    border-color: #e8344e;
+    color: #e8344e !important;
+}

@@ -1,0 +1,8 @@
+flask
+pymongo
+dnspython
+requests
+datetime
+werkzeug
+certifi
+pyjwt
