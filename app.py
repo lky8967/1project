@@ -172,8 +172,11 @@ def fridge_post():
 
 @app.route("/foodinfo/get", methods=["GET"])
 def get_food():
-    item_list = list(db.foodinfo.find({}, {'_id': False}))
-    return jsonify({'fridge':item_list})
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    food_list = list(db.foodinfo.find({"username": payload["id"]}, {'_id': False}))
+
+    return jsonify({'fridge':food_list})
 
 # 수정하기 api
 @app.route('/foodinfo/update', methods=['POST'])
