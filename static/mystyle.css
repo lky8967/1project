@@ -77,3 +77,24 @@
 .cardLast {
     text-align: center;
 }
+
+.button.is-sparta.is-outlined {
+    background-color: transparent; border-color: #e8344e; color: #e8344e !important;
+}
+
+.btn-dark {
+    color: #fff;
+    background-color: #212529;
+    border-color: white;
+}
+
+.button.is-sparta {
+    background-color: #34cde8;
+    border-color: transparent;
+    color: #fff !important;
+}
+.button.is-sparta.is-outlined {
+    background-color: transparent;
+    border-color: #e8344e;
+    color: #e8344e !important;
+}

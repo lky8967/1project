@@ -13,11 +13,6 @@ SECRET_KEY = 'SPARTA'
 
 from werkzeug.utils import secure_filename
 
-UPLOAD_FOLDER ='./save_image/' #저장경로 '현재 앱 경로/저장할 경로'
-ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg']
-
-#IMAGE_PATH = #'------s/' #사진 저장된 경로
-
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
@@ -95,8 +90,8 @@ def check_nickname_dup():
 
 
 ## API 역할을 하는 부분
-@app.route('/owtest/save', methods=['POST'])
-def foodsaving():
+@app.route('/foodinfo/save', methods=['POST'])
+def save_food():
     token_receive = request.cookies.get('mytoken')
 
     try:
@@ -113,9 +108,7 @@ def foodsaving():
         foodid = make_id()
 
     ##이미지 받기
-
         file = request.files["file_give"]
-
         extension = file.filename.split('.')[-1]
 
     ##등록시간
@@ -128,18 +121,11 @@ def foodsaving():
         save_to = f'static/{filename}.{extension}'
         file.save(save_to)
 
-
-        food_list = list(db.owtest.find({}, {'_id': False}))
-        count = len(food_list) + 1
-
-
     ##음식정보 입력
         doc = {
             "username": user_info["username"], ##유저 id입력
-            #"profile_name": user_info["nickname"], ##유저 닉네임입력
             'foodid': foodid,
             'name': name_receive,
-            'num': count,
             'group': group_receive,
             'date':date_receive,
             'star':star_receive,
@@ -148,7 +134,7 @@ def foodsaving():
             'file': f'{filename}.{extension}'
         }
 
-        db.owtest.insert_one(doc)
+        db.foodinfo.insert_one(doc)
 
         return jsonify({'msg':'저장이 완료되었습니다!'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
@@ -184,23 +170,20 @@ def fridge_post():
 
     return jsonify({'msg':'저장 완료!'})
 
-@app.route("/fridge", methods=["GET"])
-def fridge_get():
-    item_list = list(db.owtest.find({}, {'_id': False}))
-    return jsonify({'fridge':item_list})
-
-
-
+@app.route("/foodinfo/get", methods=["GET"])
+def get_food():
+    token_receive = request.cookies.get('mytoken')
+    payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    food_list = list(db.foodinfo.find({"username": payload["id"]}, {'_id': False}))
+    return jsonify({'fridge':food_list})
 
 # 수정하기 api
-@app.route('/update_profile', methods=['POST'])
+@app.route('/foodinfo/update', methods=['POST'])
 def update_food():
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        username = payload["id"]
-
-
+        foodid_receive = request.form["foodid_give"]
         name_receive = request.form["name_give"]
         comment_receive = request.form["comment_give"]
         group_receive = request.form['group_give']
@@ -224,31 +207,22 @@ def update_food():
             "group":group_receive,
             "date":date_receive,
             "star":star_receive,
-            # 'mytime1': f'{mytime1}',
             'file': f'{filename}.{extension}'
         }
-        print(food_doc)
 
-        db.owtest.update_one({}, {'$set':food_doc})
+        db.foodinfo.update_one({'foodid': int(foodid_receive)}, {'$set': food_doc})
         return jsonify({"result": "success", 'msg': '수정하였습니다.'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
 
-
 # 삭제하기
-@app.route("/api/foodDelete", methods=["POST"])
-def food_delete():
-    num_receive = request.form['num_give']
-    db.owtest.delete_one({'num': int(num_receive)})
+@app.route("/foodinfo/delete", methods=["POST"])
+def delete_food():
+    foodid_receive = request.form['foodid_give']
+    db.foodinfo.delete_one({'foodid': int(foodid_receive)})
 
     return jsonify({'msg':'삭제완료 !'})
-
-
-
-
-
-
 
 
 if __name__ == '__main__':
