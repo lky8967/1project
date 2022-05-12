@@ -279,10 +279,11 @@
             $('#post-box').hide()
         }
 
+
+
         function sign_out() {
-            alert('로그아웃!')
             $.removeCookie('mytoken', {path: '/'});
-            window.location.href = "/login"
+            alert('로그아웃!')
         }
 
     </script>
@@ -293,8 +294,16 @@
 <header class="nav">
     <nav>
         <div>
+<<<<<<< HEAD
+            <a class="button level-item has-text-centered is-sparta is-outlined" aria-label="logout"
+               onclick="sign_out()">
+                로그아웃&nbsp;&nbsp;&nbsp;<span class="icon is-small"><i class="fa fa-sign-out"
+                                                                     aria-hidden="true"></i></span>
+            </a>
+=======
             <h5 class = "login_text" style="display: inline">안녕하세요 {{ user_info.nickname }} 님</h5>
             <button class="btn-mypg"  onclick="sign_out()">로그아웃</button>
+>>>>>>> 19173e04200e072f5ac8d3ffa755c273ad49fefc
         </div>
     </nav>
 </header>
